@@ -10,6 +10,17 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 import numpy as np
+from keras.preprocessing.image import image
+from keras.layers import Dense 
+from keras.models import model_from_json 
+from keras.models import Sequential
+from keras.layers import Conv2D
+from keras.layers import MaxPooling2D
+from keras.layers import Flatten
+from keras.preprocessing.image import ImageDataGenerator
+from keras.layers import Dropout
+from keras.layers import BatchNormalization
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -56,6 +67,16 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
+        self.BrowseImage.clicked.connect(self.loadImage)
+        self.Classify.clicked.connect(self.classifyFunction)
+        self.Training.clicked.connect(self.trainingFunction)
+
+         
+
+
+
+
+
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -64,6 +85,41 @@ class Ui_MainWindow(object):
         self.pushButton_2.setText(_translate("MainWindow", "Classify"))
         self.pushButton_3.setText(_translate("MainWindow", "Training"))
         self.label_3.setText(_translate("MainWindow", "Recognized Class"))
+
+
+    def loadImage(self):
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(None, "Select Image", "", "Image Files (*.png *.jpg *jpeg *.bmp);;All Files (*)") # Ask for file
+        if fileName: # If the user gives a file
+            print(fileName)
+            self.file=fileName
+            pixmap = QtGui.QPixmap(fileName) # Setup pixmap with the provided image
+            pixmap = pixmap.scaled(self.imageLbl.width(), self.imageLbl.height(), QtCore.Qt.KeepAspectRatio) # Scale pixmap
+            self.imageLbl.setPixmap(pixmap) # Set the pixmap onto the label
+            self.imageLbl.setAlignment(QtCore.Qt.AlignCenter) # Align the label to center
+
+    def classifyFunction(self):
+        json_file = open('model.json', 'r')
+        loaded_model_json = json_file.read()
+        json_file.close()
+        loaded_model = model_from_json(loaded_model_json)
+        # load weights into new model
+        loaded_model.load_weights("model.h5")
+        print("Loaded model from disk")
+        label=["sunna","ek","das","be","tran","char","panc","cha","sat","at","nav","ALA","ANA","B","BHA","CH","CHH","D","DA","DH","DHA","F","G","GH","GNA","H","J","JH","K","KH","KSH","L","M","N","P","R","S","SH","SHH","T","TA","TH","THA","V","Y"]
+        #label=["fifty","fivehundred","hundred","ten","twenty","twohundred"]
+        path2=self.file
+        print(path2)
+        test_image = image.load_img(path2, target_size = (128, 128))        
+        test_image = image.img_to_array(test_image)
+        test_image = np.expand_dims(test_image, axis = 0)
+        result = loaded_model.predict(test_image)
+        
+        fresult=np.max(result)
+        label2=label[result.argmax()]
+        print(label2)
+        self.textEdit.setText(label2)
+
+    
 
 
 if __name__ == "__main__":

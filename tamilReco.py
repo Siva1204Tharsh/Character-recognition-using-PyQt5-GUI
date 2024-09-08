@@ -157,7 +157,7 @@ class Ui_MainWindow(object):
 
         training_set = train_datagen.flow_from_directory('E:\Data-----Science\DS AI DL ML Project for 30 Days\Character recognition using PyQt5 GUI\Dataset\Train',
                                                          target_size = (128, 128),
-                                                         batch_size = 32,
+                                                         batch_size = 8,
                                                          class_mode = 'categorical')
         #print(test_datagen);
         labels = (training_set.class_indices)
@@ -166,7 +166,7 @@ class Ui_MainWindow(object):
 
         test_set = test_datagen.flow_from_directory('E:\Data-----Science\DS AI DL ML Project for 30 Days\Character recognition using PyQt5 GUI\Dataset\test',
                                                     target_size = (128, 128),
-                                                    batch_size = 32,
+                                                    batch_size = 8,
                                                     class_mode = 'categorical')
 
         labels2 = (test_set.class_indices)
@@ -180,15 +180,15 @@ class Ui_MainWindow(object):
                                  validation_steps = 125)
 
 
-##        # Part 3 - Making new predictions
-##
-##        model_json=model.to_json()
-##        with open("model.json", "w") as json_file:
-##            json_file.write(model_json)
-##        # serialize weights to HDF5
-##            model.save_weights("model.h5")
-##            print("Saved model to disk")
-##            self.textEdit.setText("Saved model to disk")
+       # Part 3 - Making new predictions
+
+        model_json=model.to_json()
+        with open("model.json", "w") as json_file:
+           json_file.write(model_json)
+       # serialize weights to HDF5
+           model.save("model.h5")
+           print("Saved model to disk")
+           self.textEdit.setText("Saved model to disk")
     
 
 

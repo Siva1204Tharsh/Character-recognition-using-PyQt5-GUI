@@ -114,7 +114,7 @@ class Ui_MainWindow(object):
         result = loaded_model.predict(test_image)
         
         fresult=np.max(result)
-        label2=label[result.argmax()]
+        label2=label[fresult.argmax()]
         print(label2)
         self.textEdit.setText(label2)
     
@@ -122,7 +122,7 @@ class Ui_MainWindow(object):
         self.textEdit.setText("Training under process...")
         #basic cnn for tamil alphabet
         model = Sequential()
-        model.add(Conv2D(32, kernel_size = (3, 3), activation='relu', input_shape=(128,128, 1)))
+        model.add(Conv2D(32, kernel_size = (3, 3), activation='relu', input_shape=(128,128, 3)))
         model.add(MaxPooling2D(pool_size=(2,2)))
         model.add(BatchNormalization())
         model.add(Conv2D(64, kernel_size=(3,3), activation='relu'))
